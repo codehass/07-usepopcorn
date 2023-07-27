@@ -55,18 +55,20 @@ export default function App() {
 
   return (
     <>
-      <NavBar movies={movies} />
+      <NavBar>
+        <NumResult movies={movies} />
+      </NavBar>
       <Main movies={movies} />
     </>
   );
 }
 
-function NavBar({ movies }) {
+function NavBar({ children }) {
   return (
     <nav className="nav-bar">
       <Logo />
-      <Search movies={movies} />
-      <NumResult movies={movies} />
+      <Search />
+      {children}
     </nav>
   );
 }
@@ -80,7 +82,7 @@ function Logo() {
   );
 }
 
-function Search({ movies }) {
+function Search() {
   const [query, setQuery] = useState("");
   return (
     <input
