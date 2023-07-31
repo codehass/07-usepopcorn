@@ -6,21 +6,32 @@ const starContainerStyle = {
   display: "flex",
 };
 
-const textStyle = {
-  lineHeight: "1",
-  margin: "0",
-};
-
-export default function StartRating({ maxRating = 5 }) {
-  const [rating, setRating] = useState(0);
+export default function StartRating({
+  maxRating = 5,
+  color = "#fcc149",
+  size = 48,
+  className = "",
+  messages = [],
+  defaultRating = 0,
+  onSetRating,
+}) {
+  const [rating, setRating] = useState(defaultRating);
   const [temRating, setTempRating] = useState(0);
 
   function handleRating(rating) {
     setRating(rating);
+    onSetRating(rating);
   }
 
+  const textStyle = {
+    lineHeight: "1",
+    margin: "0",
+    color,
+    fontSize: `${size / 1.5}px`,
+  };
+
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className={className}>
       <div style={starContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
@@ -29,22 +40,28 @@ export default function StartRating({ maxRating = 5 }) {
             full={temRating ? temRating >= i + 1 : rating >= i + 1}
             onHoverIn={() => setTempRating(i + 1)}
             onHoverOut={() => setTempRating(0)}
+            color={color}
+            size={size}
           />
         ))}
       </div>
-      <p style={textStyle}>{temRating || rating || ""}</p>
+      <p style={textStyle}>
+        {messages.length === maxRating
+          ? messages[temRating ? temRating - 1 : rating - 1]
+          : temRating || rating || ""}
+      </p>
     </div>
   );
 }
 
-const startStyle = {
-  width: "48px",
-  height: "48px",
-  display: "block",
-  cursor: "pointer",
-};
+function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
+  const startStyle = {
+    width: `${size}px`,
+    height: `${size}px`,
+    display: "block",
+    cursor: "pointer",
+  };
 
-function Star({ onRate, full, onHoverIn, onHoverOut }) {
   return (
     <span
       role="button"
@@ -56,9 +73,9 @@ function Star({ onRate, full, onHoverIn, onHoverOut }) {
       {full ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="#000"
+          fill={color}
           viewBox="0 0 24 24"
-          stroke="#000"
+          stroke={color}
         >
           <path
             strokeLinecap="round"
@@ -72,7 +89,7 @@ function Star({ onRate, full, onHoverIn, onHoverOut }) {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#000"
+          stroke={color}
         >
           <path
             strokeLinecap="round"
