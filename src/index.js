@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-// import "./index.css";
-// import App from "./App";
+import "./index.css";
+import App from "./App";
 
-import StartRating from "./StartRating";
+// import StartRating from "./StartRating";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <StartRating
+    <App />
+    {/* <StartRating
       maxRating={5}
       messages={["Terrible", "Bad", "okay", "good", "Amazing"]}
     />
@@ -20,16 +20,16 @@ root.render(
       className="test"
       defaultRating={3}
     />
-    <Test />
+    <Test /> */}
   </React.StrictMode>
 );
 
-function Test() {
-  const [movieRating, setMovieRating] = useState(0);
-  return (
-    <div>
-      <StartRating maxRating={10} color="blue" onSetRating={setMovieRating} />
-      <p>This movie was {movieRating} stars</p>
-    </div>
-  );
-}
+// function Test() {
+//   const [movieRating, setMovieRating] = useState(0);
+//   return (
+//     <div>
+//       <StartRating maxRating={10} color="blue" onSetRating={setMovieRating} />
+//       <p>This movie was {movieRating} stars</p>
+//     </div>
+//   );
+// }
