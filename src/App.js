@@ -54,7 +54,7 @@ const average = (arr) =>
 const KEY = "a6f9780b";
 
 export default function App() {
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,9 +119,8 @@ export default function App() {
           setMovies(data.Search);
           setError("");
         } catch (err) {
-          console.error(err.message);
-
           if (err.name !== "AbortError") {
+            console.log(err.message);
             setError(err.message);
           }
         } finally {
@@ -135,7 +134,9 @@ export default function App() {
         return;
       }
 
+      handleCloseMovie();
       fetchMovies();
+
       return function () {
         controller.abort();
       };
@@ -309,8 +310,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     (movie) => movie.imdbID === selectedId
   )?.userRating;
 
-  console.log(isWatched);
-
   const {
     Title: title,
     Year: year,
@@ -341,6 +340,23 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
   useEffect(
     function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+          console.log("closing");
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       async function getMovieDetails() {
         setIsLoading(true);
         const resp = await fetch(
@@ -348,7 +364,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
         );
 
         const data = await resp.json();
-        console.log(data);
         setMovie(data);
         setIsLoading(false);
       }
@@ -364,6 +379,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
       return function () {
         document.title = "usePopcorn";
+        // console.log(`Clean up effect for movie ${title}`);
       };
     },
     [title]
